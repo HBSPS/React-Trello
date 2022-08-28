@@ -8,7 +8,7 @@ interface IAreaProps {
 };
 
 const Wrapper = styled.div`
-  padding: 20px 10px;
+  padding: 10px 0px;
   padding-top: 10px;
   width: 300px;
   background-color: ${(props) => props.theme.boardColor};
@@ -21,14 +21,16 @@ const Wrapper = styled.div`
 const Title = styled.h2`
     text-align: left;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 20px;
+    padding-left: 20px;
 `;
 
 const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#f7f1e3" : props.draggingFromThisWith ? "#95afc0" : "#fad390"};
+    background-color: ${props => props.isDraggingOver ? "#95afc0" : props.draggingFromThisWith ? "#f7f1e3" : props.theme.boardColor};
     flex-grow: 1;
     transition: background-color .3s ease-in-out;
+    padding: 20px;
 `;
 
 interface IBoardProps {
