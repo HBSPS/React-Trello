@@ -27,7 +27,7 @@ const Title = styled.h2`
 `;
 
 const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#95afc0" : props.draggingFromThisWith ? "#f7f1e3" : props.theme.boardColor};
+    background-color: ${props => props.isDraggingOver ? "#f7f1e3" : props.draggingFromThisWith ? "#95afc0" : props.theme.boardColor};
     flex-grow: 1;
     transition: background-color .3s ease-in-out;
     padding: 20px;
