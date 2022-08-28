@@ -6,8 +6,7 @@ import Board from "./Components/Board";
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
-  width: 100%;
+  max-width: 100vw;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -15,24 +14,32 @@ const Wrapper = styled.div`
 `;
 
 const Boards = styled.div`
-  display: grid;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
-  grid-template-columns: repeat(1, 1fr);
+  gap: 10px;
 `;
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
-  const onDragEnd = ({ draggableId, destination, source }: DropResult) => {
-    if (!destination) return;
-    /* setToDos((oldToDos) => {
-      const copyToDos = [...oldToDos];
-      // 초기 index에 해당하는 요소 삭제
-      copyToDos.splice(source.index, 1);
-      // 해당 요소를 목적지 index로 이동
-      copyToDos.splice(destination?.index, 0, draggableId);
-      return copyToDos;
-    }); */
+
+  const onDragEnd = (info: DropResult) => {
+    const { destination, draggableId, source } = info;
+    if (destination?.droppableId === source.droppableId) {
+      setToDos((oldToDos) => {
+        const boardCopy = [...oldToDos[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination?.index, 0, draggableId);
+
+        return {
+          ...oldToDos,
+          [source.droppableId]: boardCopy
+        };
+      });
+    };
   };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
