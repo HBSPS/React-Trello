@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h2`
-    text-align: center;
+    text-align: left;
     font-weight: bold;
     margin-bottom: 20px;
     font-size: 20px;

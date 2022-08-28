@@ -26,20 +26,37 @@ function App() {
 
   const onDragEnd = (info: DropResult) => {
     const { destination, draggableId, source } = info;
+
+    if (!destination) return;
+
     if (destination?.droppableId === source.droppableId) {
-      setToDos((oldToDos) => {
-        const boardCopy = [...oldToDos[source.droppableId]];
+      // 같은 보드안에서 순서를 바꾸는 경우
+      setToDos((oldBoards) => {
+        const boardCopy = [...oldBoards[source.droppableId]];
         boardCopy.splice(source.index, 1);
         boardCopy.splice(destination?.index, 0, draggableId);
-
         return {
-          ...oldToDos,
+          ...oldBoards,
           [source.droppableId]: boardCopy
         };
       });
     };
-  };
 
+    if (destination.droppableId !== source.droppableId) {
+      // 다른 보드로의 이동
+      setToDos((oldBoards) => {
+        const sourceBoard = [...oldBoards[source.droppableId]];
+        const destinationBoard = [...oldBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination.index, 0, draggableId);
+        return {
+          ...oldBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard
+        };
+      });
+    };
+  };
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
