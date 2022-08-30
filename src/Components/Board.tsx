@@ -11,7 +11,6 @@ interface IAreaProps {
 };
 
 const Wrapper = styled.div`
-  padding: 10px 0px;
   padding-top: 10px;
   width: 300px;
   background-color: ${(props) => props.theme.boardColor};
@@ -21,26 +20,58 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
+const Header = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+`;
+
 const Title = styled.h2`
     text-align: left;
     font-weight: bold;
-    margin-bottom: 10px;
     font-size: 20px;
     padding-left: 20px;
 `;
 
+const DeleteButton = styled.button`
+    border: none;
+    border-radius: 5px;
+    text-align: right;
+    background-color: ${(props) => props.theme.boardColor};
+    margin-right: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+
+    &:hover {
+        background-color: #95afc0;
+    }
+`;
+
 const Area = styled.div<IAreaProps>`
-    background-color: ${props => props.isDraggingOver ? "#f7f1e3" : props.draggingFromThisWith ? "#95afc0" : props.theme.boardColor};
+    background-color: ${props => props.isDraggingOver ? "#95afc0" : props.theme.boardColor}; //#f7f1e3
     flex-grow: 1;
     transition: background-color .3s ease-in-out;
     padding: 20px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 `;
 
 const Form = styled.form`
-    width: 100%;
+    margin: 10px 20px;
+    text-align: center;
+`;
 
-    input {
-        width: 100%;
+const InputToDo = styled.input`
+    width: 100%;
+    padding: 10px;
+    background-color: ${(props) => props.theme.cardColor};
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+
+    ::placeholder {
+        color: ${(props) => props.theme.textColor};
     }
 `;
 
@@ -62,18 +93,32 @@ function Board({ toDos, boardId }: IBoardProps) {
             text: toDo
         };
         setToDos((allBoards) => {
-            return {
+            const data = {
                 ...allBoards,
                 [boardId]: [...allBoards[boardId], newToDo]
             };
+
+            return data;
         });
         setValue("toDo", "");
     };
+    const onClickDelete = (boardId: string) => {
+        setToDos((allBoards) => {
+            const copy = { ...allBoards }
+            delete copy[boardId];
+            return {
+                ...copy
+            };
+        });
+    };
     return (
         <Wrapper>
-            <Title>{boardId}</Title>
+            <Header>
+                <Title>{boardId}</Title>
+                <DeleteButton onClick={() => onClickDelete(boardId)}>❌</DeleteButton>
+            </Header>
             <Form onSubmit={handleSubmit(onValid)}>
-                <input {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`}></input>
+                <InputToDo {...register("toDo", { required: true })} type="text" placeholder={`Add Task on ${boardId}`}></InputToDo>
             </Form>
             <Droppable droppableId={boardId}>
                 {(magic, snapshot) => (

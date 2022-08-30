@@ -2,7 +2,9 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { toDoState } from "./atoms";
+import Add from "./Components/Add";
 import Board from "./Components/Board";
+import Delete from "./Components/Delete";
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,6 +21,7 @@ const Boards = styled.div`
   align-items: flex-start;
   width: 100%;
   gap: 10px;
+  position: relative;
 `;
 
 function App() {
@@ -44,8 +47,20 @@ function App() {
       });
     };
 
+    // Delete로 이동하는 경우
+    if (destination.droppableId === "delete") {
+      setToDos((oldBoards) => {
+        const boardCopy = [...oldBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+
+        return {
+          ...oldBoards,
+          [source.droppableId]: boardCopy
+        };
+      });
+    }
     // 다른 보드로 이동하는 경우
-    if (destination.droppableId !== source.droppableId) {
+    else if (destination.droppableId !== source.droppableId) {
       setToDos((oldBoards) => {
         const sourceBoard = [...oldBoards[source.droppableId]];
         const taskObj = sourceBoard[source.index];
@@ -60,12 +75,15 @@ function App() {
       });
     };
   };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <Wrapper>
           <Boards>
+            <Add />
             {Object.keys(toDos).map((boardId) => <Board boardId={boardId} key={boardId} toDos={toDos[boardId]} />)}
+            <Delete />
           </Boards>
         </Wrapper>
       </DragDropContext>
