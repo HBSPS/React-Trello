@@ -1,7 +1,8 @@
 import { Droppable } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { ITodo } from "../atoms";
+import { ITodo, toDoState } from "../atoms";
 import DraggableCard from "./DraggableCard";
 
 interface IAreaProps {
@@ -53,8 +54,19 @@ interface IForm {
 }
 
 function Board({ toDos, boardId }: IBoardProps) {
+    const setToDos = useSetRecoilState(toDoState);
     const { register, setValue, handleSubmit } = useForm<IForm>();
-    const onValid = ({toDo}: IForm) => {
+    const onValid = ({ toDo }: IForm) => {
+        const newToDo = {
+            id: Date.now(),
+            text: toDo
+        };
+        setToDos((allBoards) => {
+            return {
+                ...allBoards,
+                [boardId]: [...allBoards[boardId], newToDo]
+            };
+        });
         setValue("toDo", "");
     };
     return (
