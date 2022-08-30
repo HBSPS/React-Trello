@@ -27,10 +27,11 @@ function App() {
   const onDragEnd = (info: DropResult) => {
     const { destination, draggableId, source } = info;
 
+    // 목적지가 정상적이지 않은 경우
     if (!destination) return;
 
+    // 같은 보드안에서 순서를 바꾸는 경우
     if (destination?.droppableId === source.droppableId) {
-      // 같은 보드안에서 순서를 바꾸는 경우
       setToDos((oldBoards) => {
         const boardCopy = [...oldBoards[source.droppableId]];
         boardCopy.splice(source.index, 1);
@@ -42,8 +43,8 @@ function App() {
       });
     };
 
+    // 다른 보드로 이동하는 경우
     if (destination.droppableId !== source.droppableId) {
-      // 다른 보드로의 이동
       setToDos((oldBoards) => {
         const sourceBoard = [...oldBoards[source.droppableId]];
         const destinationBoard = [...oldBoards[destination.droppableId]];
